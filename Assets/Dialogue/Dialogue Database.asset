@@ -130,6 +130,10 @@ MonoBehaviour:
       value: Get the item and return to the guy!
       type: 0
       typeString: 
+    - title: Track
+      value: True
+      type: 2
+      typeString: CustomFieldType_Boolean
   locations: []
   variables:
   - id: 1
