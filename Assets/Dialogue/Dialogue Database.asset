@@ -436,7 +436,7 @@ MonoBehaviour:
         destinationDialogueID: 5
         isConnector: 0
         priority: 2
-      conditionsString: 
+      conditionsString: CurrentQuestState("MVP Quest") == "active"
       userScript: 
       onExecute:
         m_PersistentCalls:
@@ -498,7 +498,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 210
+        x: 209
         y: 120
         width: 160
         height: 30
@@ -596,7 +596,7 @@ MonoBehaviour:
       conditionPriority: 2
       outgoingLinks: []
       conditionsString: 
-      userScript: SetQuestEntryState("MVP Quest", 1, "success")
+      userScript: SetQuestState("MVP Quest", "success")
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -742,7 +742,7 @@ MonoBehaviour:
       falseConditionAction: Block
       conditionPriority: 2
       outgoingLinks: []
-      conditionsString: 
+      conditionsString: CurrentQuestState("MVP Quest") == "success"
       userScript: 
       onExecute:
         m_PersistentCalls:
