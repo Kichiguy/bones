@@ -7,8 +7,7 @@ public class Switch : MonoBehaviour
 
     public Sprite UnpressedSprite;
     public Sprite PressedSprite;
-    public GameObject OpenDoor;
-    public GameObject ClosedDoor;
+    public Door door;
 
     private SpriteRenderer spriteRenderer;
     private bool opened = false;
@@ -42,15 +41,13 @@ public class Switch : MonoBehaviour
     {
         opened = true;
         spriteRenderer.sprite = PressedSprite;
-        OpenDoor.SetActive(true);
-        ClosedDoor.SetActive(false);
+        door.OpenDoor();
     }
 
     void CloseTheDoor()
     {
         opened = false;
         spriteRenderer.sprite = UnpressedSprite;
-        OpenDoor.SetActive(false);
-        ClosedDoor.SetActive(true);
+        door.CloseDoor();
     }
 }
