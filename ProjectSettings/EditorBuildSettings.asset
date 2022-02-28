@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MVP2.unity
     guid: 385b218db0ebfee4180f270bdc16aaa7
+  - enabled: 1
+    path: Assets/Scenes/MVP3.unity
+    guid: defb6fc0cbd9c184a94cb8dc4fd21181
   m_configObjects: {}
