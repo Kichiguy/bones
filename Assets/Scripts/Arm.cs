@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Arm : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Awake() 
     {
-        
+        Swing();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D other) 
     {
-        
+        if(other.gameObject.tag == "Breakable") Destroy(other.gameObject);
+    }
+
+    private void Swing()
+    {
+
     }
 }

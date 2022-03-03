@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     float moveLimiter = 0.7f;
     bool dragging = false;
     bool draggingHorizontal;
+    string facing = "left";
+    float spawnDistance = 0.5f;
 
     public GameObject arm;
     public float moveSpeed = 5.0f;
@@ -66,7 +68,24 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        
+        var newArm = Instantiate(arm, this.transform, false);
+        switch(facing)
+        {
+            case "left":
+                newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);
+                break;
+            case "right":
+                newArm.transform.position = new Vector3(transform.position.x + spawnDistance,transform.position.y,0);
+                break;
+            case "up":
+                newArm.transform.position = new Vector3(transform.position.x,transform.position.y + spawnDistance,0);
+                break;
+            case "down":
+                newArm.transform.position = new Vector3(transform.position.x,transform.position.y - spawnDistance,0);
+                break;
+            default:
+                break;
+        }
     }
 
     private void NormalMove()
@@ -81,6 +100,11 @@ public class PlayerController : MonoBehaviour
         rigidBody.velocity = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
         //Set sprite direction
         if(CheckForFlip()) sprite.flipX = !sprite.flipX;
+        if(horizontal > 0) facing = "right";
+        else if(horizontal < 0) facing = "left";
+        else if (vertical > 0) facing = "up";
+        else if (vertical < 0) facing = "down";
+
     }
 
     private void DragMove()
