@@ -6,12 +6,11 @@ public class Breakable : MonoBehaviour
 {
     public GameObject Contents;
     
-    public void Break()
-    {
+    private void OnDestroy() {
+        Debug.Log("BREAK");
         if (Contents != null)
         {
-            Instantiate(Contents);
+            Instantiate(Contents,transform.position,transform.rotation);
         }
-        Destroy(gameObject);
     }
 }

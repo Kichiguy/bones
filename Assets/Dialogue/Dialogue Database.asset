@@ -127,7 +127,7 @@ MonoBehaviour:
       type: 0
       typeString: 
     - title: Entry 1
-      value: Get the item and return to the guy!
+      value: 'Skulls Collected:  [var=Skulls]/3'
       type: 0
       typeString: 
     - title: Track
@@ -150,16 +150,16 @@ MonoBehaviour:
       value: 
       type: 0
       typeString: 
-  - id: 2
+  - id: 3
     fields:
     - title: Name
-      value: mvpHasItem
+      value: Skulls
       type: 0
       typeString: 
     - title: Initial Value
-      value: False
-      type: 2
-      typeString: CustomFieldType_Boolean
+      value: 0
+      type: 1
+      typeString: CustomFieldType_Number
     - title: Description
       value: Quest item for MVP quest
       type: 0
@@ -299,7 +299,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Dialogue Text
-        value: Hey, can you go into that room and get me my thing?
+        value: Hey, can you go into these rooms and get me my skulls? I need my skulls.
         type: 0
         typeString: 
       - title: Sequence
@@ -409,7 +409,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Dialogue Text
-        value: Did you get my thing yet?
+        value: Did you get my skulls yet?
         type: 0
         typeString: 
       - title: Sequence
@@ -470,7 +470,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Dialogue Text
-        value: Sure. here it is.
+        value: Sure. here they are.
         type: 0
         typeString: 
       - title: Sequence
@@ -491,14 +491,14 @@ MonoBehaviour:
         destinationDialogueID: 6
         isConnector: 0
         priority: 2
-      conditionsString: Variable["mvpHasItem"] == true
+      conditionsString: Variable["Skulls"] >= 3
       userScript: 
       onExecute:
         m_PersistentCalls:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 209
+        x: 210
         y: 120
         width: 160
         height: 30

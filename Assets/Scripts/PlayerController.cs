@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         switch(facing)
         {
             case "left":
-                newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);
+                newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);               
                 break;
             case "right":
                 newArm.transform.position = new Vector3(transform.position.x + spawnDistance,transform.position.y,0);
