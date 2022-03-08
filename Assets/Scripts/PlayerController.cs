@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     float horizontal;
     float vertical;
     float moveLimiter = 0.7f;
+    float dashDistance = 2.0f;
     bool dragging = false;
     bool draggingHorizontal;
     string facing = "left";
@@ -68,6 +69,17 @@ public class PlayerController : MonoBehaviour
     private void Dash()
     {
         Debug.Log("DASH");
+        switch(facing)
+        {
+            case "left":
+                break;
+            case "right":
+                break;
+            case "up":
+                break;
+            case "down":
+                break;
+        }
     }
     
     private void Drag()
