@@ -13,8 +13,7 @@ public class PlayerController : MonoBehaviour
     bool dragging = false;
     bool draggingHorizontal;
     string facing = "left";
-    float spawnDistance = 0.5f;
-
+    float spawnDistance = 0.4f;
     public GameObject arm;
     public float moveSpeed = 5.0f;
 
@@ -45,6 +44,12 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
+
+        //Check for dash
+        if(Input.GetButtonDown("Dash") && !dragging)
+        {
+            Dash();
+        }
     }
 
     private void FixedUpdate() 
@@ -60,6 +65,10 @@ public class PlayerController : MonoBehaviour
         else return false;
     }
 
+    private void Dash()
+    {
+        Debug.Log("DASH");
+    }
     
     private void Drag()
     {
@@ -69,19 +78,28 @@ public class PlayerController : MonoBehaviour
     private void Attack()
     {
         var newArm = Instantiate(arm, this.transform, false);
+        Arm armComponent = newArm.GetComponent<Arm>();
         switch(facing)
         {
             case "left":
-                newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);               
+                newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);
+                newArm.transform.Rotate(0,0,260);
+                armComponent.Swing();
                 break;
             case "right":
                 newArm.transform.position = new Vector3(transform.position.x + spawnDistance,transform.position.y,0);
+                newArm.transform.Rotate(0,0,80);
+                armComponent.Swing();
                 break;
             case "up":
                 newArm.transform.position = new Vector3(transform.position.x,transform.position.y + spawnDistance,0);
+                newArm.transform.Rotate(0,0,170);
+                armComponent.Swing();
                 break;
             case "down":
                 newArm.transform.position = new Vector3(transform.position.x,transform.position.y - spawnDistance,0);
+                newArm.transform.Rotate(0,0,10);
+                armComponent.Swing();
                 break;
             default:
                 break;
