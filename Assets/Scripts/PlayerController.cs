@@ -10,13 +10,16 @@ public class PlayerController : MonoBehaviour
     float horizontal;
     float vertical;
     float moveLimiter = 0.7f;
-    float dashDistance = 2.0f;
+    float dashTimer;
     bool dragging = false;
+    DashState dashState = DashState.Ready;
     bool draggingHorizontal;
-    string facing = "left";
+    Facing facing = Facing.Left;
     float spawnDistance = 0.4f;
     public GameObject arm;
     public float moveSpeed = 5.0f;
+    public float dashSpeed = 10.0f;
+    public float maxDash = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,7 @@ public class PlayerController : MonoBehaviour
         //Set horizontal and vertical movement values
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
-
+        
         //Checks to see if the player is dragging something
         if(Input.GetButton("Drag"))
         {
@@ -47,16 +50,15 @@ public class PlayerController : MonoBehaviour
         }
 
         //Check for dash
-        if(Input.GetButtonDown("Dash") && !dragging)
-        {
-            Dash();
-        }
+        Dash();
+
+        Debug.Log(dashState);
     }
 
     private void FixedUpdate() 
     {
-        if(dragging) DragMove();
-        else NormalMove();
+        //if(dragging && !dashing) DragMove();
+        Move();
     }
 
     private bool CheckForFlip()
@@ -68,16 +70,32 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        Debug.Log("DASH");
-        switch(facing)
+        switch(dashState)
         {
-            case "left":
+            case DashState.Ready:
+                if(dragging) break;
+                if(Input.GetButtonDown("Dash"))
+                {
+                    dashState = DashState.Dashing;
+                    Physics2D.IgnoreLayerCollision(0,6,true);
+                }
                 break;
-            case "right":
+            case DashState.Dashing:
+                dashTimer += Time.deltaTime;
+                if (dashTimer >= maxDash)
+                {
+                    dashTimer = maxDash;
+                    dashState = DashState.Cooldown;
+                    Physics2D.IgnoreLayerCollision(0,6,false);
+                }
                 break;
-            case "up":
-                break;
-            case "down":
+            case DashState.Cooldown:
+                dashTimer -= Time.deltaTime;
+                if(dashTimer <= 0)
+                {
+                    dashTimer = 0;
+                    dashState = DashState.Ready;
+                }
                 break;
         }
     }
@@ -93,22 +111,22 @@ public class PlayerController : MonoBehaviour
         Arm armComponent = newArm.GetComponent<Arm>();
         switch(facing)
         {
-            case "left":
+            case Facing.Left:
                 newArm.transform.position = new Vector3(transform.position.x - spawnDistance,transform.position.y,0);
                 newArm.transform.Rotate(0,0,260);
                 armComponent.Swing();
                 break;
-            case "right":
+            case Facing.Right:
                 newArm.transform.position = new Vector3(transform.position.x + spawnDistance,transform.position.y,0);
                 newArm.transform.Rotate(0,0,80);
                 armComponent.Swing();
                 break;
-            case "up":
+            case Facing.Up:
                 newArm.transform.position = new Vector3(transform.position.x,transform.position.y + spawnDistance,0);
                 newArm.transform.Rotate(0,0,170);
                 armComponent.Swing();
                 break;
-            case "down":
+            case Facing.Down:
                 newArm.transform.position = new Vector3(transform.position.x,transform.position.y - spawnDistance,0);
                 newArm.transform.Rotate(0,0,10);
                 armComponent.Swing();
@@ -118,7 +136,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void NormalMove()
+    private void Move()
     {
         //Check for diagonal movement
         if(horizontal !=0 && vertical !=0)
@@ -127,18 +145,60 @@ public class PlayerController : MonoBehaviour
             vertical *= moveLimiter;
         }
         //Apply movement
-        rigidBody.velocity = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
-        //Set sprite direction
-        if(CheckForFlip()) sprite.flipX = !sprite.flipX;
-        if(horizontal > 0) facing = "right";
-        else if(horizontal < 0) facing = "left";
-        else if (vertical > 0) facing = "up";
-        else if (vertical < 0) facing = "down";
+        if(dashState == DashState.Dashing)
+        {
+            DashMove();
+        }
+        else
+        {        
+            //Set sprite direction
+            if(CheckForFlip()) sprite.flipX = !sprite.flipX;
+            if(horizontal > 0) facing = Facing.Right;
+            else if(horizontal < 0) facing = Facing.Left;
+            else if (vertical > 0) facing = Facing.Up;
+            else if (vertical < 0) facing = Facing.Down;
 
+            rigidBody.velocity = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
+        }
+
+    }
+
+    private void DashMove()
+    {
+        switch(facing)
+        {
+            case Facing.Left:
+                rigidBody.velocity = new Vector2(-dashSpeed,0);
+                break;
+            case Facing.Right:
+                rigidBody.velocity = new Vector2(dashSpeed,0);
+                break;
+            case Facing.Up:
+                rigidBody.velocity = new Vector2(0,dashSpeed);
+                break;
+            case Facing.Down:
+                rigidBody.velocity = new Vector2(0,-dashSpeed);
+                break;
+        }
     }
 
     private void DragMove()
     {
 
+    }
+
+    private enum DashState
+    {
+        Ready,
+        Dashing,
+        Cooldown
+    }
+
+    private enum Facing
+    {
+        Left,
+        Right,
+        Up,
+        Down
     }
 }

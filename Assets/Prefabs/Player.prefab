@@ -150,6 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arm: {fileID: 1512566995855457818, guid: 40a008dacb5817f49973d47304fd8f59, type: 3}
   moveSpeed: 10
+  dashSpeed: 30
+  maxDash: 0.1
 --- !u!114 &7740279014385169156
 MonoBehaviour:
   m_ObjectHideFlags: 0
