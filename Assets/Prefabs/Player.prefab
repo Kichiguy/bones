@@ -152,6 +152,7 @@ MonoBehaviour:
   moveSpeed: 10
   dashSpeed: 30
   maxDash: 0.1
+  dragRange: 0.8
 --- !u!114 &7740279014385169156
 MonoBehaviour:
   m_ObjectHideFlags: 0

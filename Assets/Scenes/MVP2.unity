@@ -531,7 +531,7 @@ GameObject:
   - component: {fileID: 767204037}
   - component: {fileID: 767204036}
   - component: {fileID: 767204035}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Box
   m_TagString: Heavy
   m_Icon: {fileID: 0}
@@ -546,7 +546,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767204034}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

@@ -6,12 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rigidBody;
     SpriteRenderer sprite;
+    BoxCollider2D collider;
 
     float horizontal;
     float vertical;
     float moveLimiter = 0.7f;
     float dashTimer;
     bool dragging = false;
+    Transform draggedObject;
     DashState dashState = DashState.Ready;
     bool draggingHorizontal;
     Facing facing = Facing.Left;
@@ -20,12 +22,14 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5.0f;
     public float dashSpeed = 10.0f;
     public float maxDash = 0.5f;
+    public float dragRange = 0.5f;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        collider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -38,10 +42,17 @@ public class PlayerController : MonoBehaviour
         //Checks to see if the player is dragging something
         if(Input.GetButton("Drag"))
         {
-            dragging = true;
             Drag();
         }
-        else dragging = false;
+        if(Input.GetButtonUp("Drag"))
+        {
+            if(draggedObject != null) 
+            {
+                draggedObject.parent = null;
+                draggedObject = null;
+            }
+            dragging = false;
+        }
 
         //Checks for attack
         if(Input.GetButtonDown("Fire1") && !dragging)
@@ -51,8 +62,6 @@ public class PlayerController : MonoBehaviour
 
         //Check for dash
         Dash();
-
-        Debug.Log(dashState);
     }
 
     private void FixedUpdate() 
@@ -102,7 +111,30 @@ public class PlayerController : MonoBehaviour
     
     private void Drag()
     {
-        dragging = true;
+        Vector2 direction = new Vector2(0,0);
+        switch(facing)
+        {
+            case Facing.Left:
+                direction = Vector2.left;
+                break;
+            case Facing.Right:
+                direction = Vector2.right;
+                break;
+            case Facing.Up:
+                direction = Vector2.up;
+                break;
+            case Facing.Down:
+                direction = Vector2.down;
+                break;
+        }
+        
+        RaycastHit2D ray = Physics2D.Raycast(transform.position, direction, dragRange, LayerMask.GetMask("Draggable"));
+        if(ray.collider != null)
+        {
+            dragging = true;
+            draggedObject = ray.collider.transform;
+            draggedObject.parent = transform;
+        }
     }
 
     private void Attack()
