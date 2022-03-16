@@ -116,15 +116,19 @@ public class PlayerController : MonoBehaviour
         {
             case Facing.Left:
                 direction = Vector2.left;
+                draggingHorizontal = true;
                 break;
             case Facing.Right:
                 direction = Vector2.right;
+                draggingHorizontal = true;
                 break;
             case Facing.Up:
                 direction = Vector2.up;
+                draggingHorizontal = false;
                 break;
             case Facing.Down:
                 direction = Vector2.down;
+                draggingHorizontal = false;
                 break;
         }
         
@@ -176,8 +180,21 @@ public class PlayerController : MonoBehaviour
             horizontal *= moveLimiter;
             vertical *= moveLimiter;
         }
+        if(dragging)
+        {
+            if(draggingHorizontal)
+            { 
+                vertical = 0;
+                horizontal *= 0.5f;
+            }
+            else 
+            {
+                horizontal = 0;
+                vertical *= 0.5f;
+            }
+        }
         //Apply movement
-        if(dashState == DashState.Dashing)
+        if(dashState == DashState.Dashing && !dragging)
         {
             DashMove();
         }
@@ -190,7 +207,14 @@ public class PlayerController : MonoBehaviour
             else if (vertical > 0) facing = Facing.Up;
             else if (vertical < 0) facing = Facing.Down;
 
-            rigidBody.velocity = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
+            Vector2 movement = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
+
+            if(draggedObject != null)
+            {
+                draggedObject.GetComponent<Rigidbody2D>().velocity = movement;
+            }
+
+            rigidBody.velocity = movement;
         }
 
     }
