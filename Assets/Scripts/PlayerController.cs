@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Components
     Rigidbody2D rigidBody;
     SpriteRenderer sprite;
     BoxCollider2D collider;
-
+    #endregion
+    
+    #region Private Variables
     float horizontal;
     float vertical;
     float moveLimiter = 0.7f;
@@ -18,15 +21,20 @@ public class PlayerController : MonoBehaviour
     bool draggingHorizontal;
     Facing facing = Facing.Left;
     float spawnDistance = 0.4f;
+    #endregion
+
+    #region Public Variables
     public GameObject arm;
     public float moveSpeed = 5.0f;
     public float dashSpeed = 10.0f;
     public float maxDash = 0.5f;
     public float dragRange = 0.5f;
+    #endregion
 
-    // Start is called before the first frame update
+    #region Unity Methods
     void Start()
     {
+        //Set components
         rigidBody = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         collider = GetComponent<BoxCollider2D>();
@@ -39,11 +47,13 @@ public class PlayerController : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         
-        //Checks to see if the player is dragging something
+        //Checks to see if the player is trying to drag something
         if(Input.GetButton("Drag"))
         {
             Drag();
         }
+
+        //Resets drag state when button is released
         if(Input.GetButtonUp("Drag"))
         {
             if(draggedObject != null) 
@@ -54,22 +64,27 @@ public class PlayerController : MonoBehaviour
             dragging = false;
         }
 
-        //Checks for attack
+        //Checks for attack if the player is not dragging something
         if(Input.GetButtonDown("Fire1") && !dragging)
         {
             Attack();
         }
 
-        //Check for dash
+        //Check for dash state
         Dash();
     }
 
     private void FixedUpdate() 
     {
-        //if(dragging && !dashing) DragMove();
+        //Applies movement
         Move();
     }
-
+    #endregion
+    
+    #region Private Methods
+    /// <summary>
+    /// Determines if the player sprite should flip. This should be removed when full animations are in place.
+    /// </summary>
     private bool CheckForFlip()
     {
         if(horizontal < 0 && sprite.flipX == true) return true;
@@ -77,6 +92,9 @@ public class PlayerController : MonoBehaviour
         else return false;
     }
 
+    /// <summary>
+    /// Checks the current dash state. Applies the dash action if dash is ready and player is pushing the button. Checks if the player should still be dashing if currently dashing. Ticks down the cooldown if currently in cooldown.
+    /// </summary>
     private void Dash()
     {
         switch(dashState)
@@ -86,7 +104,7 @@ public class PlayerController : MonoBehaviour
                 if(Input.GetButtonDown("Dash"))
                 {
                     dashState = DashState.Dashing;
-                    Physics2D.IgnoreLayerCollision(0,6,true);
+                    Physics2D.IgnoreLayerCollision(0,6,true); //Ignores collision with anything in the Pit layer.
                 }
                 break;
             case DashState.Dashing:
@@ -95,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 {
                     dashTimer = maxDash;
                     dashState = DashState.Cooldown;
-                    Physics2D.IgnoreLayerCollision(0,6,false);
+                    Physics2D.IgnoreLayerCollision(0,6,false); //Resets Pit layer collision.
                 }
                 break;
             case DashState.Cooldown:
@@ -108,9 +126,12 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-    
+    /// <summary>
+    /// This method allows the player to push and pull Draggable objects in the game. A raycast is created in the direction that the player is currently facing and looks for the first Draggable object in range and then sets the dragging state accordingly.
+    /// </summary>
     private void Drag()
     {
+        //Checks and sets the direction the player is currently facing.
         Vector2 direction = new Vector2(0,0);
         switch(facing)
         {
@@ -132,6 +153,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         
+        //Casts a ray out to the current drag range and returns anything on the Draggable layer. The object is set as a child to the player transform.
         RaycastHit2D ray = Physics2D.Raycast(transform.position, direction, dragRange, LayerMask.GetMask("Draggable"));
         if(ray.collider != null)
         {
@@ -237,12 +259,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
-    private void DragMove()
-    {
-
-    }
-
+    #region Enums
     private enum DashState
     {
         Ready,
@@ -257,4 +276,5 @@ public class PlayerController : MonoBehaviour
         Up,
         Down
     }
+    #endregion
 }
