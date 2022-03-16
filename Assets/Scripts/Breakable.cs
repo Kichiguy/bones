@@ -10,6 +10,7 @@ public class Breakable : MonoBehaviour
         Debug.Log("BREAK");
         if (Contents != null)
         {
+            if(!this.gameObject.scene.isLoaded) return;
             Instantiate(Contents,transform.position,transform.rotation);
         }
     }
